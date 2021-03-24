@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour
     private bool m_doJump = false;
     private bool m_isGround = false;
     Vector2 moveDirection = Vector2.zero;
-    InputActionControls inputActionController = null;
 
 
     #region UNITY
@@ -24,26 +23,6 @@ public class PlayerController : MonoBehaviour
 	{
         m_rigidbody2D.GetComponent<Rigidbody2D>();
 	}
-
-	// Start is called before the first frame update
-	void Awake()
-    {
-        inputActionController = new InputActionControls();
-    }
-
-	private void Start()
-	{
-        inputActionController.Player.Jump.performed += _ => Jump();
-    }
-
-	private void OnEnable()
-	{
-        inputActionController.Enable();
-    }
-    private void OnDisable()
-    {
-        inputActionController.Disable();
-    }
 
     // Update is called once per frame
     void Update()
@@ -62,8 +41,6 @@ public class PlayerController : MonoBehaviour
 		{
             m_currentVelocity.x = 0.0f;
         }*/
-
-        moveDirection.x = inputActionController.Player.Move.ReadValue<Vector2>().x;
 
         m_currentVelocity.x = moveDirection.x * m_speed;
 
@@ -108,14 +85,6 @@ public class PlayerController : MonoBehaviour
         return m_isGround;
 	}
 
-    void Jump()
-	{
-        if (m_isGround)
-        {
-            m_rigidbody2D.AddForce(Vector2.up * m_jumpSpeed, ForceMode2D.Impulse);
-        }
-    }
-
     public void OnMove(InputAction.CallbackContext context)
     {
         moveDirection = context.ReadValue<Vector2>();
@@ -123,6 +92,16 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (!context.performed)
+        {
+            return;
+        }
+
+        if (m_isGround)
+        {
+            m_rigidbody2D.AddForce(Vector2.up * m_jumpSpeed, ForceMode2D.Impulse);
+        }
+
         Debug.Log("Jump!");
     }
 }
