@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,9 +13,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask m_layerGround;
 
     Vector2 m_currentVelocity = Vector2.zero;
-    private bool m_isJumping = false;
+    private bool m_doJump = false;
     private bool m_isGround = false;
-    float moveDirection = 0.0f;
+    Vector2 moveDirection = Vector2.zero;
+    InputActionControls inputActionController = null;
 
 
     #region UNITY
@@ -24,9 +26,23 @@ public class PlayerController : MonoBehaviour
 	}
 
 	// Start is called before the first frame update
-	void Start()
+	void Awake()
     {
+        inputActionController = new InputActionControls();
+    }
 
+	private void Start()
+	{
+        inputActionController.Player.Jump.performed += _ => Jump();
+    }
+
+	private void OnEnable()
+	{
+        inputActionController.Enable();
+    }
+    private void OnDisable()
+    {
+        inputActionController.Disable();
     }
 
     // Update is called once per frame
@@ -34,7 +50,7 @@ public class PlayerController : MonoBehaviour
     {
         m_currentVelocity = m_rigidbody2D.velocity;
 
-        if(Input.GetKey(KeyCode.Q))
+        /*if(Input.GetKey(KeyCode.Q))
 		{
             m_currentVelocity.x = -m_speed;
         }
@@ -45,15 +61,19 @@ public class PlayerController : MonoBehaviour
 		else
 		{
             m_currentVelocity.x = 0.0f;
-        }
+        }*/
 
-        if (m_isGround)
+        moveDirection.x = inputActionController.Player.Move.ReadValue<Vector2>().x;
+
+        m_currentVelocity.x = moveDirection.x * m_speed;
+
+        /*if (m_isGround)
         {
             if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.Space))
             {
                 m_currentVelocity.y = m_jumpSpeed;
             }
-        }
+        }*/
     }
 
     void FixedUpdate()
@@ -87,4 +107,22 @@ public class PlayerController : MonoBehaviour
         
         return m_isGround;
 	}
+
+    void Jump()
+	{
+        if (m_isGround)
+        {
+            m_rigidbody2D.AddForce(Vector2.up * m_jumpSpeed, ForceMode2D.Impulse);
+        }
+    }
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        moveDirection = context.ReadValue<Vector2>();
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        Debug.Log("Jump!");
+    }
 }
