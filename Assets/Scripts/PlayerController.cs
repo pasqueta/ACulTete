@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask m_layerGround;
 
     Vector2 m_currentVelocity = Vector2.zero;
-    private bool m_doJump = false;
     private bool m_isGround = false;
     Vector2 moveDirection = Vector2.zero;
 
@@ -29,28 +28,7 @@ public class PlayerController : MonoBehaviour
     {
         m_currentVelocity = m_rigidbody2D.velocity;
 
-        /*if(Input.GetKey(KeyCode.Q))
-		{
-            m_currentVelocity.x = -m_speed;
-        }
-        else if(Input.GetKey(KeyCode.D))
-		{
-            m_currentVelocity.x = m_speed;
-        }
-		else
-		{
-            m_currentVelocity.x = 0.0f;
-        }*/
-
         m_currentVelocity.x = moveDirection.x * m_speed;
-
-        /*if (m_isGround)
-        {
-            if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.Space))
-            {
-                m_currentVelocity.y = m_jumpSpeed;
-            }
-        }*/
     }
 
     void FixedUpdate()
@@ -101,7 +79,5 @@ public class PlayerController : MonoBehaviour
         {
             m_rigidbody2D.AddForce(Vector2.up * m_jumpSpeed, ForceMode2D.Impulse);
         }
-
-        Debug.Log("Jump!");
     }
 }
