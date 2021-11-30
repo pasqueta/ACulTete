@@ -34,6 +34,10 @@ public class PlayerCharacter : MonoBehaviour
 
     void WeaknessIsTouch(Collider2D collider)
 	{
-        m_onWeaknessTouch.Invoke();
+        if (collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            m_onWeaknessTouch.Invoke();
+            Debug.Log(transform.root + ": Outch my head !!");
+        }
 	}
 }

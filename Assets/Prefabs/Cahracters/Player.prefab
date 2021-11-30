@@ -569,7 +569,7 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 1a439068-53d6-4dcf-a4a9-51ed45e20043
     m_ActionName: Player/Jump[/Keyboard/z,/Keyboard/space]
-  m_NeverAutoSwitchControlSchemes: 0
+  m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
